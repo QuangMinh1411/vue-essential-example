@@ -1,26 +1,56 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <NavBar :numberOfItems="numberOfItems" />
+  <router-view :shoppingCart="shoppingCart"
+  :products="products"
+  :userInfo="userInfo"
+  @addToCart="addCart"
+  @userInfoSaved="updateUserInfo">
+  </router-view>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 
+import products from './pages/products';
+import NavBar from './components/NavBar';
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    NavBar,
+  
+},
+  data() {
+    return {
+      shoppingCartIds: [],
+      products,
+      userInfo:{
+        name:'',
+        age:0,
+        address:''
+      }
+    }
+  },
+  computed: {
+    shoppingCart(){
+      return this.shoppingCartIds.map(id=>{
+        return this.products.find(p=>p.id===id);
+      });
+    },
+    numberOfItems(){
+      return this.shoppingCartIds.length;
+    }
+  },
+  methods: {
+    addCart(id) {
+      this.shoppingCartIds.push(id);
+      console.log(this.shoppingCartIds);
+    },
+    updateUserInfo(name,age,address){
+      this.userInfo = {name,age,address}
+    }
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>
